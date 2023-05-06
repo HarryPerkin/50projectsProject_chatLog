@@ -1,10 +1,13 @@
-# A program intended to save ChatGPT responses from clipboard.
+# An interactive prompt for OpenAI that saves your prompts and responses to a log.
 
-import pyperclip
+import openai, datetime
+openai.api_key = "YOUR KEY HERE"
 
-clip = pyperclip.paste()
+dt = datetime.datetime.now()
+prompt = input("PROMPT: ")
 
+response = openai.Completion.create(engine="davinci", prompt=prompt, max_tokens=2000, temperature = 0.5)
 with open("responses.txt", "a") as file:
-    file.write("\n\n---------- \n\n")
-    file.write(clip)
-print("Success.")
+    file.write(dt.strftime("\n" + "%Y-%m-%d::%H-%M") + " Prompt: " + prompt + "\n" + "Response: " + response.choices[0].text + "\n")
+
+print("\n" + response.choices[0].text)
